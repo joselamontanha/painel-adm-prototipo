@@ -710,7 +710,8 @@ export default function Hospitais() {
                             type="file"
                             inputProps={{ accept: ".csv" }}
                             onChange={(e) => {
-                                const f = (e.target.files && e.target.files[0]) || null;
+                                const input = e.target as HTMLInputElement; // 👈 estreita para input
+                                const f = input.files?.[0] || null;
                                 setCsvName(f ? f.name : "");
                             }}
                             fullWidth
