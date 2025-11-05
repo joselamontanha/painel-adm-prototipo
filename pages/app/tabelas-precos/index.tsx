@@ -23,7 +23,6 @@ import {
     DialogActions,
     MenuItem,
     FormControlLabel,
-    Chip,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
@@ -188,7 +187,7 @@ function makeRows(qty = 120): Row[] {
     return rows;
 }
 
-// ---------------- Sub-buscas (padrão Hospitais Planos) ----------------
+// ---------------- Sub-buscas ----------------
 function OperadoraSearch({ onSelect }: { onSelect: (o: Operadora) => void }) {
     const [cnpj, setCnpj] = React.useState("");
     const [razao, setRazao] = React.useState("");
@@ -458,7 +457,23 @@ function TabelasPrecos() {
                     <Stack gap={0.8}>
                         <Typography variant="subtitle1" fontWeight={700}>Filtros obrigatórios</Typography>
                         <Stack direction={{ xs: "column", md: "row" }} gap={1}>
-                            <TextField size="small" label="Praça" value={praca ? `${praca.nome} - ${praca.uf}` : ""} InputProps={{ readOnly: true }} onClick={() => {/* no modal de praça neste protótipo */ }} fullWidth />
+                            {/* Praça agora como dropdown */}
+                            <TextField
+                                select
+                                size="small"
+                                label="Praça"
+                                value={praca?.id ?? ""}
+                                onChange={(e) => {
+                                    const v = e.target.value;
+                                    setPraca(v ? PRACAS.find(p => p.id === Number(v)) || null : null);
+                                }}
+                                fullWidth
+                            >
+                                <MenuItem value="">(Selecione)</MenuItem>
+                                {PRACAS.map(p => (
+                                    <MenuItem key={p.id} value={p.id}>{`${p.uf} - ${p.nome}`}</MenuItem>
+                                ))}
+                            </TextField>
 
                             <Stack direction="row" gap={1} sx={{ width: "100%" }}>
                                 <TextField size="small" label="Operadora" value={operadora ? `${operadora.nome} - ${operadora.uf}` : ""} InputProps={{ readOnly: true }} fullWidth onClick={() => setOpenOp(true)} />
@@ -470,7 +485,7 @@ function TabelasPrecos() {
                     </Stack>
                 </Paper>
 
-                {/* Filtros opcionais (formato padronizado com sub-telas) */}
+                {/* Filtros opcionais */}
                 <Paper sx={{ p: 1.2 }}>
                     <Stack gap={0.8}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -513,17 +528,16 @@ function TabelasPrecos() {
                             <TextField size="small" label="Qtd. de Vidas (nº)" type="number" value={qtdVidas} onChange={(e) => setQtdVidas(e.target.value === "" ? "" : Number(e.target.value))} fullWidth />
                         </Stack>
 
-                        <Stack direction={{ xs: "column", md: "row" }} gap={1}>
+                        <Stack direction={{ xs: "column", md: "row" }} gap={1} sx={{ flexWrap: 'nowrap' }}>
                             {/* Faixa Fidelidade */}
-                            <Stack direction="row" gap={1} sx={{ width: "100%" }}>
+                            <Stack direction="row" gap={1} sx={{ width: "100%", flexWrap: 'nowrap' }}>
                                 <TextField size="small" label="Faixa Fidelidade" value={faixaFidSel ?? ""} InputProps={{ readOnly: true }} fullWidth onClick={() => setOpenFid(true)} />
                                 <Button variant="outlined" size="small" onClick={() => setOpenFid(true)}>Pesquisar</Button>
                             </Stack>
 
-                            <TextField size="small" label="Valor (mín)" type="number" value={valorMin} onChange={(e) => setValorMin(e.target.value === "" ? "" : Number(e.target.value))} fullWidth />
-                            <TextField size="small" label="Valor (máx)" type="number" value={valorMax} onChange={(e) => setValorMax(e.target.value === "" ? "" : Number(e.target.value))} fullWidth />
-
-                            <TextField size="small" label="Vigência Final (= data)" type="date" value={vigenciaFinal} onChange={(e) => setVigenciaFinal(e.target.value)} InputLabelProps={{ shrink: true }} fullWidth />
+                            <TextField size="small" label="Valor (mín)" type="number" value={valorMin} onChange={(e) => setValorMin(e.target.value === "" ? "" : Number(e.target.value))} sx={{ width: 160 }} />
+                            <TextField size="small" label="Valor (máx)" type="number" value={valorMax} onChange={(e) => setValorMax(e.target.value === "" ? "" : Number(e.target.value))} sx={{ width: 160 }} />
+                            <TextField size="small" label="Vigência Final (= data)" type="date" value={vigenciaFinal} onChange={(e) => setVigenciaFinal(e.target.value)} InputLabelProps={{ shrink: true }} sx={{ width: 180 }} />
                             <FormControlLabel control={<Checkbox checked={apenasVigentes} onChange={(e) => setApenasVigentes(e.target.checked)} />} label="Apenas Preços Vigentes" />
                         </Stack>
                     </Stack>
@@ -592,7 +606,7 @@ function TabelasPrecos() {
                 </Paper>
             </Stack>
 
-            {/* ---------- DIALOGS (padrão Hospitais Planos) ---------- */}
+            {/* ---------- DIALOGS ---------- */}
             <Dialog open={openOp} onClose={() => setOpenOp(false)} fullWidth maxWidth="md">
                 <DialogTitle>Pesquisar Operadora</DialogTitle>
                 <DialogContent dividers>
