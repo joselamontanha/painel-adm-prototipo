@@ -1,0 +1,61 @@
+Atualizar o deploy (fluxo mais comum)
+
+Faça mudanças no código local.
+
+No terminal, na pasta do projeto:
+
+git add .
+git commit -m "feat: ajuste na tela de Hospitais (import/export mock)"
+git push
+
+
+O Netlify detecta o push e faz um novo deploy automático.
+
+Abra o painel do Netlify → Deploys para acompanhar o build.
+
+A URL principal é atualizada quando o build “Published” terminar.
+
+Dica: usar branches e “Deploy Previews”
+
+Crie uma branch por feature:
+
+git checkout -b feat/hospitais-validacoes
+# edita...
+git add .
+git commit -m "feat: validações adicionais no modal Incluir"
+git push -u origin feat/hospitais-validacoes
+
+
+Abra um Pull Request no GitHub.
+
+O Netlify gera uma URL de preview automática para esse PR (ótimo pra equipe revisar sem afetar o site principal).
+
+Depois de aprovado, merge na main → novo deploy da produção.
+
+Se algo quebrar: rollback em 1 clique
+
+Netlify → Deploys → escolha um deploy anterior estável → Publish deploy.
+
+Isso volta o site para a versão publicada escolhida (sem mexer no Git).
+
+“Clear cache and deploy site”
+
+Se notar erro estranho de cache no build:
+
+Netlify → Deploys → Trigger deploy → Clear cache and deploy site.
+
+Ajustes úteis (opcionais)
+
+Proteção por senha (se quiser deixar interno):
+Site settings → Visitor access → Password protection.
+
+Variáveis de ambiente (se um dia precisar):
+Site settings → Environment variables.
+
+Plugin Next.js + Node 20 (já deixamos com netlify.toml; se mudar versão do Node, ajuste lá).
+
+Resumo do seu dia a dia
+
+Pequenas mudanças: git add . && git commit && git push → Netlify publica.
+
+Mudanças grandes: branch + PR → revisa no Deploy Preview → merge → publica.
