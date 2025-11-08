@@ -53,7 +53,7 @@ export default function LoginPage() {
                                 alt="ClickPlanos"
                                 style={{ height: 40, objectFit: "contain" }}
                             />
-                            <Typography variant="subtitle1" color="text.secondary">Painel Administrativoo</Typography>
+                            <Typography variant="subtitle1" color="text.secondary">Painel Administrativo</Typography>
                         </Stack>
 
                         <Stack gap={2}>
